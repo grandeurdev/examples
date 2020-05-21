@@ -14,8 +14,7 @@ String password = "saeen786";
 ApolloDevice device;
 
 // Variable to store time reference
-// unsigned long current;
-unsigned long current = millis();
+unsigned long current;
 
 // Status and state
 int status = false;
