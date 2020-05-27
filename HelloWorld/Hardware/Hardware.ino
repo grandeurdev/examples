@@ -23,7 +23,7 @@ double state = 0;
 // Function to respond to connection status changes
 void onConnection(JSONObject connection) {
   switch((int) connection["status"]) {
-        case APOLLO_CONNECTED:
+        case CONNECTED:
           // Connected to the server
           status = true;
 
@@ -33,7 +33,7 @@ void onConnection(JSONObject connection) {
 
           return;
 
-        case APOLLO_DISCONNECTED:
+        case DISCONNECTED:
           // Disconnected from server
           status = false;
 
