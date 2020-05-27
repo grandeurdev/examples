@@ -22,7 +22,7 @@ double state = 0;
 
 // Function to respond to connection status changes
 void onConnection(JSONObject connection) {
-  switch((int) connection["status"]) {
+  switch((int) connection["event"]) {
         case CONNECTED:
           // Connected to the server
           status = true;
