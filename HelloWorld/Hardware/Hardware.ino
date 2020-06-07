@@ -1,90 +1,97 @@
-// Include the SDK
+/* Including the SDK header */
 #include <Apollo.h>
 
-// Configurations
+/* Configurations */
 String deviceID = "YOUR-DEVICE-ID";
 String apiKey = "YOUR-APIKEY";
 String token = "YOUR-ACCESS-TOKEN";
 
-// Wifi credentials
-String ssid = "Saeen Ki Wingle";
-String password = "saeen786";
+/* WiFi credentials */
+String ssid = "WIFI-SSID";
+String passphrase = "WIFI-PASSWORD";
 
-// Create a new object 
+/* New object of ApolloDevice class */
 ApolloDevice device;
 
-// Variable to store time reference
+/* Variable to store time reference */
 unsigned long current;
 
-// Status and state
+/* Connection status and device state */
 int status = false;
 double state = 0;
 
-// Function to respond to connection status changes
-void onConnection(JSONObject connection) {
-  switch((int) connection["event"]) {
+/* Function to check device's connection status */
+void onConnection(JSONObject updateObject) {
+  switch((int) updateObject["event"]) {
         case CONNECTED:
-          // Connected to the server
+          /* Device connected to the cloud */
           status = true;
 
-          // Take a snapshot of time 
-          // to start timer
+          /* 
+              Takes a snapshot of time 
+              for timer
+          */
           current = millis();          
 
           return;
 
         case DISCONNECTED:
-          // Disconnected from server
+          /* Device disconnected from cloud */
           status = false;
 
           return;
   }
 }
 
-// Function to handle update from server
+/* Function to handle update in device state */
 void handleUpdate(JSONObject payload) {
-    // Get state
+    /* Get state */
     double newState = (double) payload["deviceParms"]["state"];
     
-    // Print if got an update
+    /* Print if got an update */
     if (newState != state) {
-       // Update state
+       /* Update state */
        state = newState;
 
-       // Print
+       /* Print */
        Serial.println(state);
     }
 }
 
-// In setup
+/* In setup */
 void setup() {
-    // Begin the serial
+    /* Begin the serial */
     Serial.begin(9600);
     
-    // Initialize the global object "apollo" with your configurations.
-    device = apollo.init(deviceID, apiKey, token, ssid, password);
+    /* Initializes the global object "apollo" with your configurations. */
+    device = apollo.init(deviceID, apiKey,s token, ssid, passphrase);
 
-    // Connection listener
+    /* Sets connection state update handler */
     device.onConnection(onConnection);
 }
 
-// Loop function
+/* Loop function */
 void loop() {
-    // Check status
+    /* Checks device connection status */
     if (status) {
-        // If we are connected
-        // Then after every five seconds
+        /*
+            If device is connected to the cloud
+        */
         if (millis() - current >= 5000) {
-            Serial.println("Checking for Update");
+        /* Code in this if-block runs after every 5 seconds
+        */
+            Serial.println("Checking for Update...");
             
-            // Get update from server
+            /* Gets new Parms from the cloud and passes the
+               them to *handleUpdate* function.
+            */
             device.getParms(handleUpdate);
 
-            // Update Current
+            /* Updates *current* variable */
             current = millis();
         }
     }
     
-    // Let the SDK sync
+    /* Synchronizes the SDK with the cloud */
     device.update();
 }
