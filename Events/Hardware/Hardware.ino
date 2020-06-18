@@ -1,5 +1,6 @@
-/* Including the SDK header */
+/* Including the SDK and WiFi header */
 #include <Apollo.h>
+#include <ESP8266WiFi.h>
 
 /* Configurations */
 String deviceID = "YOUR-DEVICE-ID";
@@ -8,7 +9,7 @@ String token = "YOUR-ACCESS-TOKEN";
 
 /* WiFi credentials */
 String ssid = "WIFI-SSID";
-String passphrase = "WIFI-PASSWORD";
+String password = "WIFI-PASSWORD";
 
 /* New object of ApolloDevice class */
 ApolloDevice device;
@@ -40,13 +41,38 @@ void handleUpdate(JSONObject updateObject) {
 
 }
 
+/* Function to connect to WiFi */
+void connectWiFi() {
+    /* Set mode to station */
+    WiFi.mode(WIFI_STA);
+
+    /* Connect using the ssid and password */
+    WiFi.begin(ssid, password);
+
+    /* Block till WiFi connected */
+    while (WiFi.status() != WL_CONNECTED) {
+         delay(500);
+         Serial.print(".");
+    }
+    
+    /* Connected to WiFi so print message */
+    Serial.println("");
+    Serial.println("WiFi connected");
+
+    /* and IP address */
+    Serial.println(WiFi.localIP());
+}
+
 /* In setup */
 void setup() {
     /* Begin the serial */
     Serial.begin(9600);
+
+    /* Connect to WiFi */
+    connectWiFi();
     
     /* Initializes the global object "apollo" with your configurations. */
-    device = apollo.init(deviceID, apiKey, token, ssid, passphrase);
+    device = apollo.init(deviceID, apiKey, token);
 
     /* Sets connection state update handler */
     device.onConnection(onConnection);
@@ -58,5 +84,5 @@ void setup() {
 /* Loop function */
 void loop() {
     /* Synchronizes the SDK with the cloud */
-    device.update();
+    device.loop(WiFi.status() == WL_CONNECTED);
 }

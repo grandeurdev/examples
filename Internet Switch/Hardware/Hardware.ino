@@ -1,63 +1,46 @@
-/* Including the SDK and WiFi header */
+/* Including the SDK and WiFi library */
 #include <Apollo.h>
 #include <ESP8266WiFi.h>
-
 
 /* Configurations */
 String deviceID = "YOUR-DEVICE-ID";
 String apiKey = "YOUR-APIKEY";
 String token = "YOUR-ACCESS-TOKEN";
 
-/* WiFi credentials */
+// /* WiFi credentials */
 String ssid = "WIFI-SSID";
 String password = "WIFI-PASSWORD";
 
 /* New object of ApolloDevice class */
 ApolloDevice device;
 
-/* Variable to store time reference */
-unsigned long current;
-
-/* Connection status and device state */
-int status = false;
-double state = 0;
-
 /* Function to check device's connection status */
 void onConnection(JSONObject updateObject) {
   switch((int) updateObject["event"]) {
         case CONNECTED:
           /* Device connected to the cloud */
-          status = true;
-
-          /* 
-              Takes a snapshot of time 
-              for timer
-          */
-          current = millis();          
-
+          
+          Serial.println("Device is connected to the cloud.");
           return;
 
         case DISCONNECTED:
           /* Device disconnected from cloud */
-          status = false;
+          Serial.println("Device is disconnected from the cloud.");
 
           return;
   }
 }
 
-/* Function to handle update in device state */
-void handleUpdate(JSONObject payload) {
+/* Function to handle parms update event  */
+void handleParmsUpdate(JSONObject updateObject) {
     /* Get state */
-    double newState = (double) payload["deviceParms"]["state"];
+    int state = (int) updateObject["state"];
     
-    /* Print if got an update */
-    if (newState != state) {
-       /* Update state */
-       state = newState;
-
-       /* Print */
-       Serial.println(state);
-    }
+    /* Print state */
+    Serial.printf("Updated state is %d\n", state);
+    
+    /* Update pin level */
+    digitalWrite(2, state);
 }
 
 /* Function to connect to WiFi */
@@ -95,30 +78,22 @@ void setup() {
 
     /* Sets connection state update handler */
     device.onConnection(onConnection);
+
+    /* Subscribe to change of params */
+    device.onParmsUpdated(handleParmsUpdate);
+
+    /* Set mode of LED to output */
+    pinMode(2, OUTPUT); 
+    
+    /* By default turn the LED off */
+    digitalWrite(2, 0);    
 }
 
 /* Loop function */
 void loop() {
-    /* Checks device connection status */
-    if (status) {
-        /*
-            If device is connected to the cloud
-        */
-        if (millis() - current >= 5000) {
-        /* Code in this if-block runs after every 5 seconds
-        */
-            Serial.println("Checking for Update...");
-            
-            /* Gets new Parms from the cloud and passes the
-               them to *handleUpdate* function.
-            */
-            device.getParms(handleUpdate);
-
-            /* Updates *current* variable */
-            current = millis();
-        }
-    }
-    
-    /* Synchronizes the SDK with the cloud */
+    /* 
+        Synchronizes the SDK with the cloud 
+        SDK will loop till we are connected to WiFi
+    */
     device.loop(WiFi.status() == WL_CONNECTED);
-}
+} 

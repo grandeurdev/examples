@@ -4,17 +4,25 @@
   <!-- Head block of our page-->
   <head>
     <!-- Title of our page-->
-    <title>First Grandeur App</title>
+    <title>Internet Switch</title>
 
     <!-- Link SDK with CDN -->
     <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
+
+    <!-- Add CSS styles -->
+    <link rel="stylesheet" href="./styles.css">
   </head>
   
   <!-- Body block of our page-->
   <body>
     <!-- Heading of the page -->
-    <h1>First Grandeur App</h1>
+    <h1>Internet Switch with Grandeur Cloud</h1>
+
+    <!-- Status -->
     <p id="status">Starting</p>
+
+    <!-- Button to toggle on board LED -->
+    <button onclick="toggleLED()">Toggle LED</button>
 
     <!-- Link the main script file -->
     <script src="./main.js"></script>
