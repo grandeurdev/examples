@@ -11,12 +11,13 @@ String token = "YOUR-ACCESS-TOKEN";
 String ssid = "WIFI-SSID";
 String password = "WIFI-PASSWORD";
 
-/* New object of ApolloDevice class */
-ApolloDevice device;
+/* Create variable to hold project and device */
+Project apolloProject;
+Device device;
 
 /* Function to check device's connection status */
-void onConnection(JSONObject updateObject) {
-  switch((int) updateObject["event"]) {
+void onConnection(bool status) {
+  switch(status) {
         case CONNECTED:
           /* Device connected to the cloud */
           
@@ -25,7 +26,7 @@ void onConnection(JSONObject updateObject) {
 
         case DISCONNECTED:
           /* Device disconnected to cloud */
-          Serial.println("Device is disconnected to the cloud.");
+          Serial.println("Device is disconnected from the cloud.");
 
           return;
   }
@@ -72,17 +73,20 @@ void setup() {
     connectWiFi();
     
     /* Initializes the global object "apollo" with your configurations. */
-    device = apollo.init(deviceID, apiKey, token);
-
+    apolloProject = apollo.init(apiKey, token);
+    
+    /* Get reference to device */
+    device = apolloProject.device(deviceID);
+    
     /* Sets connection state update handler */
-    device.onConnection(onConnection);
-
-    /* Subscribe to change of params data */
-    device.onParmsUpdated(handleUpdate);
+    apolloProject.onConnection(onConnection);
+    
+    /* Add event handler on parms update */
+    device.onParms(handleUpdate);
 }
 
 /* Loop function */
 void loop() {
     /* Synchronizes the SDK with the cloud */
-    device.loop(WiFi.status() == WL_CONNECTED);
+    apolloProject.loop(WiFi.status() == WL_CONNECTED);
 }

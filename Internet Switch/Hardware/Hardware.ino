@@ -7,16 +7,17 @@ String deviceID = "YOUR-DEVICE-ID";
 String apiKey = "YOUR-APIKEY";
 String token = "YOUR-ACCESS-TOKEN";
 
-// /* WiFi credentials */
+/* WiFi credentials */
 String ssid = "WIFI-SSID";
 String password = "WIFI-PASSWORD";
 
-/* New object of ApolloDevice class */
-ApolloDevice device;
+/* Create variable to hold project and device */
+Project apolloProject;
+Device device;
 
 /* Function to check device's connection status */
-void onConnection(JSONObject updateObject) {
-  switch((int) updateObject["event"]) {
+void onConnection(bool status) {
+  switch(status) {
         case CONNECTED:
           /* Device connected to the cloud */
           
@@ -25,15 +26,15 @@ void onConnection(JSONObject updateObject) {
 
         case DISCONNECTED:
           /* Device disconnected from cloud */
-          Serial.println("Device is disconnected from the cloud.");
 
+          Serial.println("Device is disconnected from the cloud.");
           return;
   }
 }
 
-/* Function to handle parms update event  */
-void handleParmsUpdate(JSONObject updateObject) {
-    /* Get state */
+/* Function to handle parms update event */
+void handleUpdate(JSONObject updateObject) {
+    /* Get state from the updated parms */
     int state = (int) updateObject["state"];
     
     /* Print state */
@@ -51,21 +52,20 @@ void connectWiFi() {
     /* Connect using the ssid and password */
     WiFi.begin(ssid, password);
 
-    /* Block till WiFi connected */
+    /* Block till the WiFi is connected */
     while (WiFi.status() != WL_CONNECTED) {
          delay(500);
          Serial.print(".");
     }
     
-    /* Connected to WiFi so print message */
+    /* Print message */
     Serial.println("");
     Serial.println("WiFi connected");
 
-    /* and IP address */
+    /* And IP address */
     Serial.println(WiFi.localIP());
 }
 
-/* In setup */
 void setup() {
     /* Begin the serial */
     Serial.begin(9600);
@@ -74,26 +74,28 @@ void setup() {
     connectWiFi();
     
     /* Initializes the global object "apollo" with your configurations. */
-    device = apollo.init(deviceID, apiKey, token);
-
-    /* Sets connection state update handler */
-    device.onConnection(onConnection);
-
-    /* Subscribe to change of params */
-    device.onParmsUpdated(handleParmsUpdate);
-
-    /* Set mode of LED to output */
-    pinMode(2, OUTPUT); 
+    apolloProject = apollo.init(apiKey, token);
     
-    /* By default turn the LED off */
+    /* Get reference to device */
+    device = apolloProject.device(deviceID);
+    
+    /* Sets connection state update handler */
+    apolloProject.onConnection(onConnection);
+    
+    /* Add event handler on parms update */
+    device.onParms(handleUpdate);   
+    
+    /* Set mode of LED to output */
+    pinMode(2, OUTPUT);
+
+    /* Turn the LED off by default */
     digitalWrite(2, 0);    
 }
 
-/* Loop function */
 void loop() {
     /* 
-        Synchronizes the SDK with the cloud 
-        SDK will loop till we are connected to WiFi
+        Synchronizes the SDK with the cloud
+        SDK will loop till we are connected to WiFi    
     */
-    device.loop(WiFi.status() == WL_CONNECTED);
-} 
+    apolloProject.loop(WiFi.status() == WL_CONNECTED);
+}

@@ -32,15 +32,15 @@ apolloProject.onConnection((status) => {
             */
             
             var deviceID = "YOUR-DEVICE-ID";
-
+            
             /* Here we use *Date* for a random state value */
             var state = Date.now();
             
             /* Gets reference to device class */
-            var device = apolloProject.device();
+            var devices = apolloProject.devices();
 
             /* Updates the device state */
-            await device.setDeviceParms(deviceID, {state: Date.now()});
+            await devices.device(deviceID).setParms({state: Date.now()});
    
             /* Logs the state to browser's console */  
             console.log(state);
