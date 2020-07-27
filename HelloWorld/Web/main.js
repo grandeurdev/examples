@@ -1,95 +1,110 @@
-// main.js
+/*
+    main.js
+    Initialize the SDK and get
+    a reference to the project
+*/
 
-// Initialize the SDK and get
-// a reference to the project
 var apolloProject = apollo.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
 
 var timer = null;
 
-// Subscribe to the connection status
+/* Setting the connection status update handler */
 apolloProject.onConnection((status) => {
-  // This callback gets fired
-  // whenever the connection status
-  // changes
+  /* 
+      This callback gets fired
+      whenever the connection status
+      changes
+  */
 
-  switch (status) {
-    case "CONNECTED":
-      // SDK connected 
-      // Set the status
-      document.getElementById("status").innerText = "Connected";
+  switch(status) {
+    case "CONNECTED": 
+        /*
+            If SDK is connected,
+            we set the status.
+        */
+        document.getElementById("status").innerText = "Connected";
 
-      // Start timer to send data
-      timer = setInterval(async function () {
-        // Send data to device 
-        // We will update the parameters of
-        // device and set state to a random 
-        // string
+        /* Here we set up the timer to update parms every 5 seconds */
+        timer = setInterval(async function() { 
+            /* 
+                This function updates the device parameters
+                and set the state to a random string.
+            */
+            
+            var deviceID = "YOUR-DEVICE-ID";
+            
+            /* Here we use *Date* for a random state value */
+            var state = Date.now();
+            
+            /* Gets reference to device class */
+            var devices = apolloProject.devices();
 
-        // Store device id in a variable
-        var deviceID = "devicekag09i2q000d01ysabe142je";
+            /* Updates the device state */
+            await devices.device(deviceID).setParms({state: Date.now()});
+   
+            /* Logs the state to browser's console */  
+            console.log(state);
+        }, 5000);
+        
+        break;
+    default: 
+        /* If SDK gets disconnected, we display the status
+           on the app and clear the timer.
+         */
+        document.getElementById("status").innerText = "Disconnected";
 
-        // Variable to store updated state
-        var state = Date.now();
-
-        // Get reference to device class
-        var device = apolloProject.device();
-
-        // Send data
-        await device.setDeviceParms(deviceID, { state: Date.now() });
-
-        // Log the data we send         
-        console.log(state);
-      }, 5000);
-
-      break;
-    default:
-      // Disconnected
-      document.getElementById("status").innerText = "Disconnected";
-
-      // Clear timer
-      clearInterval(timer);
+        /* Clears timer */
+        clearInterval(timer);
   }
 });
 
-// Function to login user
+/* Function to login user */
 async function login() {
-  // Store credentials into variables
-  var email = "test@example.com";
-  var password = "test:80";
+    /* Store credentials into variables */
+    var email = "EMAIL";
+    var password = "PASSWORD";
 
-  // Set the status to logging in
-  document.getElementById("status").innerText = "Logging in";
+    /* Set the status to logging in */
+    document.getElementById("status").innerText = "Logging in";
 
-  // The get a reference to auth class
-  var auth = apolloProject.auth();
+    /* Then get a reference to auth class */
+    var auth = apolloProject.auth();
 
-  // and in a try catch block
-  try {
-    // Submit request using login function
-    var res = await auth.login(email, password);
+    /* and in a try catch block */
+    try {
+        /* Submit request using login function */
+        var res = await auth.login(email, password);
 
-    // Got the response to login
-    // handle response
-    switch (res.code) {
-      case "AUTH-ACCOUNT-LOGGEDIN":
+    /* 
+        Got the response to login
+        handle response
+    */
+    switch(res.code) {
+      case "AUTH-ACCOUNT-LOGGEDIN": 
       case "AUTH-ACCOUNT-ALREADY-LOGGEDIN":
-        // User Authenticated
-        // Set the status to success
+        /*
+            User Authenticated
+            Set the status to success
+        */
         document.getElementById("status").innerText = "User Authenticated";
         break;
 
-      default:
-        // Logging failed due
-        // to invalid data
+      default: 
+        /* 
+            Logging failed due
+            to invalid data
+        */
         document.getElementById("status").innerText = "Authentication Failed";
     }
   }
-  catch (err) {
-    // Error usually got generated when
-    // we are not connected to the internet
+  catch(err) {
+    /*
+        Error usually got generated when
+        we are not connected to the internet
+    */
     document.getElementById("status").innerText = "Network Error";
   }
 }
 
-// Call login on startup
+/* Call login on startup */
 login();

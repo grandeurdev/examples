@@ -1,90 +1,128 @@
-// Include the SDK
+/* Including the SDK and WiFi header */
 #include <Apollo.h>
+#include <ESP8266WiFi.h>
 
-// Configurations
+
+/* Configurations */
 String deviceID = "YOUR-DEVICE-ID";
 String apiKey = "YOUR-APIKEY";
 String token = "YOUR-ACCESS-TOKEN";
 
-// Wifi credentials
-String ssid = "Saeen Ki Wingle";
-String password = "saeen786";
+/* WiFi credentials */
+String ssid = "WIFI-SSID";
+String password = "WIFI-PASSWORD";
 
-// Create a new object 
-ApolloDevice device;
+/* Create variable to hold project and device */
+Project apolloProject;
+Device device;
 
-// Variable to store time reference
+/* Variable to store time reference */
 unsigned long current;
 
-// Status and state
-int status = false;
+/* Connection status and device state */
+int connected = false;
 double state = 0;
 
-// Function to respond to connection status changes
-void onConnection(JSONObject connection) {
-  switch((int) connection["event"]) {
+/* Function to check device's connection status */
+void onConnection(bool status) {
+  switch(status) {
         case CONNECTED:
-          // Connected to the server
-          status = true;
+          /* Device connected to the cloud */
+          connected = true;
 
-          // Take a snapshot of time 
-          // to start timer
-          current = millis();          
+          /* 
+              Takes a snapshot of time 
+              for timer
+          */
+          current = millis();      
 
           return;
 
         case DISCONNECTED:
-          // Disconnected from server
-          status = false;
+          /* Device disconnected from cloud */
+          connected = false;
 
           return;
   }
 }
 
-// Function to handle update from server
+/* Function to handle update in device state */
 void handleUpdate(JSONObject payload) {
-    // Get state
+    /* Get state */
     double newState = (double) payload["deviceParms"]["state"];
     
-    // Print if got an update
+    /* Print if got an update */
     if (newState != state) {
-       // Update state
+       /* Update state */
        state = newState;
 
-       // Print
+       /* Print */
        Serial.println(state);
     }
 }
 
-// In setup
-void setup() {
-    // Begin the serial
-    Serial.begin(9600);
-    
-    // Initialize the global object "apollo" with your configurations.
-    device = apollo.init(deviceID, apiKey, token, ssid, password);
+/* Function to connect to WiFi */
+void connectWiFi() {
+    /* Set mode to station */
+    WiFi.mode(WIFI_STA);
 
-    // Connection listener
-    device.onConnection(onConnection);
+    /* Connect using the ssid and password */
+    WiFi.begin(ssid, password);
+
+    /* Block till WiFi connected */
+    while (WiFi.status() != WL_CONNECTED) {
+         delay(500);
+         Serial.print(".");
+    }
+    
+    /* Connected to WiFi so print message */
+    Serial.println("");
+    Serial.println("WiFi connected");
+
+    /* and IP address */
+    Serial.println(WiFi.localIP());
 }
 
-// Loop function
+/* In setup */
+void setup() {
+    /* Begin the serial */
+    Serial.begin(9600);
+
+    /* Connect to WiFi */
+    connectWiFi();
+    
+    /* Initializes the global object "apollo" with your configurations. */
+    apolloProject = apollo.init(apiKey, token);
+    
+    /* Get reference to device */
+    device = apolloProject.device(deviceID);
+    
+    /* Sets connection state update handler */
+    apolloProject.onConnection(onConnection);
+}
+
+/* Loop function */
 void loop() {
-    // Check status
-    if (status) {
-        // If we are connected
-        // Then after every five seconds
+    /* Checks device connection status */
+    if (connected) {
+        /*
+            If device is connected to the cloud
+        */
         if (millis() - current >= 5000) {
-            Serial.println("Checking for Update");
+        /* Code in this if-block runs after every 5 seconds
+        */
+            Serial.println("Checking for Update...");
             
-            // Get update from server
+            /* Gets new Parms from the cloud and passes the
+               them to *handleUpdate* function.
+            */
             device.getParms(handleUpdate);
 
-            // Update Current
+            /* Updates *current* variable */
             current = millis();
         }
     }
     
-    // Let the SDK sync
-    device.update();
+    /* Synchronizes the SDK with the cloud */
+    apolloProject.loop(WiFi.status() == WL_CONNECTED);
 }

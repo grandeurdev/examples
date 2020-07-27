@@ -1,4 +1,4 @@
-/* Including the SDK and WiFi header */
+/* Including the SDK and WiFi library */
 #include <Apollo.h>
 #include <ESP8266WiFi.h>
 
@@ -25,21 +25,23 @@ void onConnection(bool status) {
           return;
 
         case DISCONNECTED:
-          /* Device disconnected to cloud */
-          Serial.println("Device is disconnected from the cloud.");
+          /* Device disconnected from cloud */
 
+          Serial.println("Device is disconnected from the cloud.");
           return;
   }
 }
 
-/* Function to handle update in device state */
+/* Function to handle parms update event */
 void handleUpdate(JSONObject updateObject) {
-    /* Get state */
-    double state = (double) updateObject["state"];
+    /* Get state from the updated parms */
+    int state = (int) updateObject["state"];
     
     /* Print state */
-    Serial.printf("Updated state is %f\n", state);
-
+    Serial.printf("Updated state is %d\n", state);
+    
+    /* Update pin level */
+    digitalWrite(2, state);
 }
 
 /* Function to connect to WiFi */
@@ -50,21 +52,20 @@ void connectWiFi() {
     /* Connect using the ssid and password */
     WiFi.begin(ssid, password);
 
-    /* Block till WiFi connected */
+    /* Block till the WiFi is connected */
     while (WiFi.status() != WL_CONNECTED) {
          delay(500);
          Serial.print(".");
     }
     
-    /* Connected to WiFi so print message */
+    /* Print message */
     Serial.println("");
     Serial.println("WiFi connected");
 
-    /* and IP address */
+    /* And IP address */
     Serial.println(WiFi.localIP());
 }
 
-/* In setup */
 void setup() {
     /* Begin the serial */
     Serial.begin(9600);
@@ -82,11 +83,19 @@ void setup() {
     apolloProject.onConnection(onConnection);
     
     /* Add event handler on parms update */
-    device.onParms(handleUpdate);
+    device.onParms(handleUpdate);   
+    
+    /* Set mode of LED to output */
+    pinMode(2, OUTPUT);
+
+    /* Turn the LED off by default */
+    digitalWrite(2, 0);    
 }
 
-/* Loop function */
 void loop() {
-    /* Synchronizes the SDK with the cloud */
+    /* 
+        Synchronizes the SDK with the cloud
+        SDK will loop till we are connected to WiFi    
+    */
     apolloProject.loop(WiFi.status() == WL_CONNECTED);
 }
