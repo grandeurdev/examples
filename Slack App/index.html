@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<!-- Main App page -->
+<html>
+    <head>
+        <!-- Head of our application -->
+        <title>Hello App</title>
+
+        <!-- Link Grandeur Cloud JS SDK -->
+        <script src="https://unpkg.com/@grandeurcloud/apollo@1.2.1/dist/apollo.js"></script>
+
+        <!-- Link style sheet -->
+        <link rel="stylesheet" href="./src/styles.css"/>
+    </head>
+
+    <body>
+        <!-- The body of the application -->
+        <div class="container" id="loader">
+            <!-- Loading container -->
+            <svg version="1.1" id="L9" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                <path fill="#808080" d="M73,50c0-12.7-10.3-23-23-23S27,37.3,27,50 M30.9,50c0-10.5,8.5-19.1,19.1-19.1S69.1,39.5,69.1,50">
+                    <animateTransform 
+                        attributeName="transform" 
+                        attributeType="XML" 
+                        type="rotate"
+                        dur="1s" 
+                        from="0 50 50"
+                        to="360 50 50" 
+                        repeatCount="indefinite" />
+                </path>
+            </svg>
+        </div>
+
+        <div class="container" id="connect-slack" style="display: none;">
+            <!-- Authorize container -->
+            <div class="holder row">
+                <div class="slack-button" onclick="connect()">
+                    <!-- Logo -->
+                    <img src="./src//logo.png" />
+    
+                    <!-- Label -->
+                    <div class="text">Connect <b>Slack</b></div>
+                </div>
+    
+                <div class="button" onclick="logout()">
+                    <div class="text">Logout</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" id="send-message" style="display: none;">
+            <!-- Message Container -->
+            <div class="holder">
+                <!-- Channel ID -->
+                <input type="text" id="channel-id" name="channel-id" placeholder="Channel ID" />
+
+                <!-- Text block -->
+                <textarea placeholder="New Message" id="message-field"></textarea>
+
+                <!-- Submit button -->
+                <div class="button" onclick="sendMessage()">
+                    <div class="text">Send Message</div>
+                </div>
+
+                <!-- Logout Button -->
+                <div class="button" onclick="logout()">
+                    <div class="text">Logout</div>
+                </div>
+            </div>
+
+            <div class="notification" id="notification">
+                <div class="message" id="notification-message">Hello World</div>
+            </div>
+        </div>
+
+        <div class="container" id="login" style="display: none;">
+            <!-- Login Container -->
+            <div class="holder">
+                <!-- Email -->
+                <input type="email" id="email" name="email" placeholder="Email" />
+
+                <!-- Password -->
+                <input type="password" id="password" name="password" placeholder="Password" />
+
+                <!-- Submit button -->
+                <div class="button" onclick="login()">
+                    <div class="text">Login</div>
+                </div>
+            </div>
+        </div>
+
+        <script src="./src/main.js"></script>
+    </body>
+</html>
