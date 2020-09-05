@@ -1,145 +1,155 @@
-/*
-    @file: main.js
-
-    Initialize the SDK and get
-    a reference to the project
+/**
+ * @file: main.js
+ * Initialize the SDK and get 
+ * a reference to the project
 */
 
-var apolloProject = apollo.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
+var project = apollo.init("ck412ssij0007xr239uos8jfk", "accesskeonvcj1ce95013j4py80rh0", "eyJ0b2tlbiI6ImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpwWkNJNkltRmpZMlZ6YzJ0bGIyNTJZMm94WTJVNU5UQXhNMm8wY0hrNE1ISm9NQ0lzSW5SNWNHVWlPaUpoWTJObGMzTWlMQ0pwWVhRaU9qRTFPVGt5TkRrMU1UWjkuUTBfbG9memUzOFJWVFpyTURheUFVOUVfM1BtOWJuYTFLVThjeUJZalhOVSJ9");
 
-/*
-    Variable to store LED state
-    which will be off on start
+/** 
+ * This function uses the sdk to validate
+ * that if the user is authenticated or not
 */
-var LED = 0;
+async function start() {
+	/** Use sdk auth class to check auth status */
+	var res = await project.auth().isAuthenticated();
 
-/*
-    Function to send request
-    to the server to toggle the LED
-*/
-async function toggleLED() {
-    /*
-        We will store the device id in a variable
-        we generated this id while getting started
-    */
+	/** Then if the user isn't authorized then show the login screen */
+	if (res.code === "AUTH-UNAUTHORIZED") {
+		return displayLogin();
+	}
 
-    var deviceID = "YOUR-DEVICE-ID";
-
-    /* Then get a reference to device class */
-    var devices = apolloProject.devices();
-
-    /* and in a try catch block */
-    try {
-        /* Toggle LED variable */
-        LED = LED? 0: 1;
-
-        /* Submit request to update state */
-        var res = await devices.device(deviceID).setParms({state: LED});
-
-        /* Got the response */
-        switch(res.code) {
-            case "DEVICE-PARMS-UPDATED":
-                /* Updated the device state successfully */
-                console.log(`State Updated to ${LED? "ON": "OFF"}`);
-                break;
-
-            default:
-                /* Failed to update the state */
-                console.log("Failed to update the state");
-        }
-    }
-    catch(err) {
-        /*
-            Error usually got generated when
-            we are not connected to the internet
-        */
-        console.log("Network Error");
-    }
+	/** Display devices screen */
+	displayDevices();
 }
 
-/*
-    We will subscribe to connection
-    status of SDK. Like are we connected
-    to the communication bridge of server
-    or not? The SDK automatically connects
-    to server on successful authentication
-    of a user
-*/
-apolloProject.onConnection((status) => {
-    /*
-        This callback gets fired
-        whenever the connection status
-        changes.
-    */
+/** Listener on login form button to authenticate a user */
+document.getElementById("submitLogin").addEventListener("click", async () => {
+	/** Get email and password from inputs */
+	var email = document.getElementById("email").value;
+	var password = document.getElementById("password").value;
 
-    switch(status) {
-        case "CONNECTED":
-            /*
-                If SDK is connected,
-                we set the status.
-            */
-            document.getElementById("status").innerText = "Connected";
-            break;
+	/** Display laoder */
+	displayLoader();
 
-        default:
-            /* 
-                If SDK gets disconnected, we display the status
-                on the app and clear the timer.
-            */
-            document.getElementById("status").innerText = "Disconnected";
-    }
+	/** Use the sdk auth class to login the user */
+	var res = await project.auth().login(email, password);
+
+	/** If the operation was successful */
+	if (res.code === "AUTH-ACCOUNT-LOGGEDIN") {
+		/** Reset the login page */
+		document.getElementById("email").value = "";
+		document.getElementById("password").value = "";
+		
+		/** Display devices screen */
+		return displayDevices();
+	}
+
+	/** otherwise display the login screen again */
+	displayLogin();
 });
 
-/*
-    Function to login user
-    we creating while getting started
-*/
-async function login() {
-    /* Store credentials into variables */
-    var email = "EMAIL";
-    var password = "PASSWORD";
+/** Attach an event listener on connection event of sdk */
+project.onConnection((status) => {
+	/** Handle the connection status */
+	switch (status) {
+		case "CONNECTED":
+			/** Get devices list and populate the tiles */
+			getDevicesList();
+			break;
+	
+		default:
+			break;
+	}
+});
 
-    /* Set the status to logging in */
-    document.getElementById("status").innerText = "Logging in";
+/** Function to get devices list from server and populate the ui*/
+async function getDevicesList() {
+	/** Use sdk devices class */
+	var devices = await project.devices();
+	var res = await devices.list();
 
-    /* Then get a reference to auth class */
-    var auth = apolloProject.auth();
+	/** Variable to hold the ui */
+	var content = "";
 
-    /* and in a try catch block */
-    try {
-        /* Submit request using login function */
-        var res = await auth.login(email, password);
+	/** Then loop over the devices list returned in response and populate the ui */
+	res.devices.forEach(device => {
+		/** Add tile to the ui */
+		content += `
+			<div class="tile" onclick="updateState('${device.deviceID}')">
+				<div class="inner ${device.parms.state? "on" : ""}" id="${device.deviceID}" data-state="${device.parms.state}">
+					<div>${device.name}</div>
+					<img src="src/fan.svg" />
+				</div>
+			</div>
+		`
 
-    /* 
-        Got the response to login
-        handle response
-    */
-    switch(res.code) {
-      case "AUTH-ACCOUNT-LOGGEDIN": 
-      case "AUTH-ACCOUNT-ALREADY-LOGGEDIN":
-        /*
-            User Authenticated
-            Set the status to success
-        */
-        document.getElementById("status").innerText = "User Authenticated";
-        break;
+		/** Then also subscribe to the state update event of the device */
+		devices.device(device.deviceID).onParms( parms => {
+			/** Update the tile color to represent that the device is on*/
+			document.getElementById(device.deviceID).setAttribute("class", parms.state? "inner on": "inner");
 
-      default: 
-        /* 
-            Logging failed due
-            to invalid data
-        */
-        document.getElementById("status").innerText = "Authentication Failed";
-    }
-  }
-  catch(err) {
-    /*
-        Error usually got generated when
-        we are not connected to the internet
-    */
-    document.getElementById("status").innerText = "Network Error";
-  }
+			/** Update local attribute and store the latest state in it */
+			document.getElementById(device.deviceID).setAttribute("data-state", parms.state);
+		})
+	});
+
+	/** Assign content to ui */
+	document.getElementById("tiles").innerHTML = content;
 }
 
-/* Call login on startup */
-login();
+/** Function to update the state of a device */
+async function updateState(deviceID) {
+	/** Create new state */
+	var newState = document.getElementById(deviceID).getAttribute("data-state") === "1" ? 0 : 1;
+
+	/** Use the devices class of sdk to report the upgrade */
+	await project.devices().device(deviceID).setParms({
+		state: newState
+	});
+}
+
+/** Add event handler on logout icon */
+document.getElementById("logout").addEventListener("click", async () => {
+	/** Show the loader */
+	displayLoader();
+
+	/** and use the auth class of sdk to logout the user */
+	await project.auth().logout();
+
+	/** Then call start again */
+	start();
+});
+
+/** Function to show laoder screen */
+function displayLoader() {
+	/** Display loader */
+	document.getElementById("loader").style.display = "flex";
+
+	/** Hide login screen */
+	document.getElementById("login").style.display = "none";
+
+	/** Hide devices screen */
+	document.getElementById("devices").style.display = "none";
+}
+
+/** Function to show login screen */
+function displayLogin() {
+	/** Hide loader */
+	document.getElementById("loader").style.display = "none";
+
+	/** Display login screen */
+	document.getElementById("login").style.display = "flex";
+}
+
+/** Function to show devices screen */
+function displayDevices() {
+	/** Hide loader */
+	document.getElementById("loader").style.display = "none";
+
+	/** Display devices screen */
+	document.getElementById("devices").style.display = "flex";
+}
+
+/** Start the app */
+start();

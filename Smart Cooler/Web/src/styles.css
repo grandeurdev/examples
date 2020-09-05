@@ -122,14 +122,15 @@ button:active, button:focus{
     flex-wrap: wrap;
     padding: 0 15px;
     margin-top: 20px;
+    justify-content: space-between;
 }
 
 /* Tile */
 .tiles .tile {
     position: relative;
     display: block;
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 160px;
     box-sizing: border-box;
     padding: 5px;
 }
@@ -144,6 +145,11 @@ button:active, button:focus{
     background-color: #4e4e4e;
     border-radius: 5px;
     padding: 20px;
+}
+
+/* Dark state of tile - representing on state*/
+.tiles .tile .on {
+    background-color: #040404;
 }
 
 /* Title of tile */

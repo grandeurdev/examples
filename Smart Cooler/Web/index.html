@@ -7,7 +7,7 @@
 		<title>Smart Cooler</title>
 
 		<!-- Link SDK with CDN -->
-		<!-- <script src="https://unpkg.com/@grandeurcloud/apollo"></script> -->
+		<script src="https://unpkg.com/@grandeurcloud/apollo"></script>
 
 		<!-- Add CSS styles -->
 		<link rel="stylesheet" href="src/styles.css">
@@ -16,7 +16,7 @@
 	<!-- Body block of our page-->
 	<body>
 		<!-- The loader page, will be displayed while we will verify the user auth status -->
-        <div class="page center" id="loader" style="display: none;">
+        <div class="page center" id="loader">
             <!-- We are using a svg -->
             <img src="src/loader.svg" class="loader" />
 		</div>
@@ -30,12 +30,12 @@
 				<input type="password" name="password" id="password" placeholder="Password" />
 				
 				<!-- Button to submit the form-->
-				<button>Login</button>
+				<button id="submitLogin">Login</button>
 			</div>
 		</div>
 
 		<!-- The page to hold the tiles -->
-		<div id="devices" class="page inverted">
+		<div id="devices" class="page inverted" style="display: none;">
 			<!-- The header of the page -->
 			<div class="header">
 				<!-- Add a menu icon - for now it will be dummy but we can add more features in future -->
@@ -45,23 +45,24 @@
 				<div>Connected Devices</div>
 
 				<!-- Add logout icon -->
-				<img src="src/logout.svg" />
+				<img src="src/logout.svg" id="logout" />
 			</div>
 
 			<!-- Holder for tiles -->
 			<div class="tiles" id="tiles">
 				<!-- Each div represents a tile -->
-				<div class="tile">
-					<!-- Inner -->
-					<div class="inner">
-						<!-- Title -->
-						<div>Title</div>
-	
-						<!-- Fan icon -->
-						<img src="src/fan.svg" />
-					</div>
-				</div>
+				<!-- 
+					<div class="tile">
+						<div class="inner">
+							<div>Title</div>
+							<img src="src/fan.svg" />
+						</div>
+					</div> 
+				-->
 			</div>
 		</div>
+
+		<!-- Main script file -->
+		<script src="main.js"></script>
 	</body>
 </html>
