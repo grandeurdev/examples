@@ -4,7 +4,7 @@
  * a reference to the project
 */
 
-var project = apollo.init("ck412ssij0007xr239uos8jfk", "accesskeonvcj1ce95013j4py80rh0", "eyJ0b2tlbiI6ImV5SmhiR2NpT2lKSVV6STFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUpwWkNJNkltRmpZMlZ6YzJ0bGIyNTJZMm94WTJVNU5UQXhNMm8wY0hrNE1ISm9NQ0lzSW5SNWNHVWlPaUpoWTJObGMzTWlMQ0pwWVhRaU9qRTFPVGt5TkRrMU1UWjkuUTBfbG9memUzOFJWVFpyTURheUFVOUVfM1BtOWJuYTFLVThjeUJZalhOVSJ9");
+var project = apollo.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
 
 /** 
  * This function uses the sdk to validate
@@ -52,14 +52,9 @@ document.getElementById("submitLogin").addEventListener("click", async () => {
 /** Attach an event listener on connection event of sdk */
 project.onConnection((status) => {
 	/** Handle the connection status */
-	switch (status) {
-		case "CONNECTED":
-			/** Get devices list and populate the tiles */
-			getDevicesList();
-			break;
-	
-		default:
-			break;
+	if(status == "CONNECTED") {
+		/** Get devices list and populate the tiles */
+		getDevicesList();
 	}
 });
 
