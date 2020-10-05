@@ -1,0 +1,83 @@
+<!-- Index.html -->
+<!DOCTYPE html>
+<html>
+	<!-- Head block of our page-->
+	<head>
+		<!-- Let's give our page a title-->
+		<title>Energy Monitoring</title>
+
+		<!-- Link SDK with CDN -->
+		<script src="https://unpkg.com/@grandeurcloud/apollo@1.4.1"></script>
+
+		<!-- Link to chart.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
+
+		<!-- Add CSS styles -->
+		<link rel="stylesheet" href="src/styles.css">
+	</head>
+
+	<!-- Body block of our page-->
+	<body>
+		<!-- The loader page, will be displayed while we will verify the user auth status -->
+        <div class="page center" id="loader">
+            <!-- We are using a svg -->
+            <img src="src/loader.svg" class="loader" />
+		</div>
+		
+		<!-- The login page of our app -->
+		<div id="login" class="page center" style="display: none;">
+			<!-- Card holds the form -->
+			<div class="card">
+				<!-- The form to get email and passwordfrom users -->
+				<input type="email" name="email" id="email" placeholder="Email" />
+				<input type="password" name="password" id="password" placeholder="Password" />
+				
+				<!-- Button to submit the form-->
+				<button id="submitLogin">Login</button>
+			</div>
+		</div>
+
+		<!-- The page to hold the tiles -->
+		<div id="devices" class="page" style="display: none;">
+			<!-- The header of the page -->
+			<div class="header">
+				<!-- Add title of the page -->
+				<div>Paired Devices</div>
+
+				<!-- Add logout icon -->
+				<button id="logout" class="inline">Logout</button>
+			</div>
+
+			<!-- Holder for tiles -->
+			<div class="tiles" id="tiles">
+				<!-- Each div represents a tile -->
+				<!-- 
+					<div class="tile">
+						<div class="inner">
+							<div>Title</div>
+							<img src="src/fan.svg" />
+						</div>
+					</div> 
+				-->
+			</div>
+		</div>
+
+		<!-- The page to hold the graph -->
+		<div id="data" class="page" style="display: none;">
+			<!-- The header of the page -->
+			<div class="header">
+				<!-- Add logout icon -->
+				<button id="displayDevices" class="inline">Back</button>
+			</div>
+
+			<!-- Graph -->
+			<div class="graph">
+				<!-- Canvas to draw graph -->
+				<canvas id="graph" width="400" height="400"></canvas>
+			</div>
+		</div>
+
+		<!-- Main script file -->
+		<script src="main.js"></script>
+	</body>
+</html>
