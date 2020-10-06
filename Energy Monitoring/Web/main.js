@@ -42,7 +42,7 @@ document.getElementById("submitLogin").addEventListener("click", async () => {
 		document.getElementById("password").value = "";
 		
 		/** Display devices screen */
-		return setTimeout(displayDevices, 5000);
+		return displayDevices();
 	}
 
 	/** otherwise display the login screen again */

@@ -28,7 +28,7 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
 /* Variable to keep track of connection state and time */
 int connected = 0;
-long lastUpdate = 0;
+uint32_t lastUpdate = 0;
 
 /* Function to check device's connection status */
 void onConnection(bool status) {
@@ -113,28 +113,67 @@ void summaryCallback(JSONObject setResult) {
 void sendUpdate() {
     /* Send a new update after every 2 seconds */
     if (millis() - lastUpdate > 2000) {
-      /* Add code for current measurement here */
-      float current;
-      float power;
-      
-      /* Update time */
-      timeClient.update();
-      
-      /* Epoch Time */
-      unsigned long time = timeClient.getEpochTime();
-      
-      // Form packet
-      JSONObject summary;
+		/* 
+			We are first required to measure the Vpp of the input signal 
+			in order to determine the current.
+		*/
+		int readValue;  
+		int maxValue = 0;
+		int minValue = 1024;
+		float Vpp;
+		float Vrms;
+		float current;
+		float power;
 
-      summary["current"] = current;
-      summary["power"] = power;
-      summary["time"] = time;
+		/* Note the time */
+		uint32_t startTime = millis();
 
-      /* Record update */
-      device.setSummary(summary, summaryCallback);
-      
-      /* Record last record send time */
-      lastUpdate = millis();
+		/* and start a loop for one second to determine the max and min sensor value */
+		while( millis() - startTime < 1000) {
+			/* Read sensor value */
+			readValue = analogRead(A0);
+
+			/* Determine max value */    
+			if (readValue > maxValue) maxValue = readValue; 
+
+			/* Determine min value */
+			if (readValue < minValue) minValue = readValue;
+		}
+
+		/* Then calculate the Vpp */
+		Vpp = ((maxValue - minValue) * 3.3) / 1024.0;
+
+		/* Determine the Vrms */
+		Vrms = (Vpp / 2.0) * 0.707;
+
+		/* 
+			Then find the current using sensitivity of sensor 
+			It is 185mV/A for 5A, 100 mV/A for 20A and 66mV/A for 30A Module
+			We are using 5A sensor
+		*/
+		current = (Vrms * 1000.0) / 185.0;
+
+		/* Finally calculate the power considering ideal state with pure resistive load */
+		power = 230.0 * current;
+		
+		/* Update time */
+		timeClient.update();
+		
+		/* Epoch Time */
+		unsigned long time = timeClient.getEpochTime();
+		
+		// Form packet
+		JSONObject summary;
+
+		summary["current"] = current;
+		summary["power"] = power;
+		summary["time"] = time;
+
+		/* Record update */
+		device.setSummary(summary, summaryCallback);
+		
+		/* Record last record send time */
+		lastUpdate = millis();
     }
 }
 
