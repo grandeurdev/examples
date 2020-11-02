@@ -1,36 +1,43 @@
-<!-- @file Index.html -->
+<!-- @file index.html -->
 <!DOCTYPE html>
 <html>
-  <!-- Head block of our page-->
-  <head>
-    <!-- Title of our page-->
-    <title>Data Storage with Grandeur Cloud</title>
+    <!-- Head block of our page-->
+    <head>
+        <!-- Title of our page-->
+        <title>Datastore with Grandeur Cloud</title>
 
-    <!-- Link to the SDK CDN -->
-    <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
-    <!-- Link to chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
-  </head>
-  
-  <!-- Body block of our page-->
-  <body>
-    <!-- Heading of the page -->
-    <h1>Data Storage with Grandeur Cloud</h1>
-    <!-- This tag displays current status of the app flow -->
-    <p id="status">Starting...</p>
-    
-    <!-- This div contains a button to toggle state, a text paragraph tag
-      to display current value of state, and a canvas to draw a graph that'd display
-      the complete update history of the state variable -->
-    <div id="state-container" style="display: none;">
-      <button id="toggle-state">Toggle State</button>
-      <p id="state">State is: false</p>
-    </div>
-    <div id="graph-container" style="display: none;">
-      <button id="refresh-graph">Refresh Graph</button>
-      <canvas id="graph" width="400" height="100"></canvas>
-    </div>
-    <!-- Link the main script file -->
-    <script src="./main.js"></script>
-  </body>
+        <!-- Link to the SDK CDN -->
+        <script src="https://unpkg.com/@grandeurcloud/apollo"></script>
+
+        <!-- Link to chart.js CDN -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.js"></script>
+
+        <!-- Link to style sheet -->
+        <link rel="stylesheet" href="./styles.css">
+    </head>
+
+    <!-- Body block of our page-->
+    <body>
+        <!-- Heading of the page -->
+        <h1>Datastore with Grandeur Cloud</h1>
+
+        <!-- This tag displays current status of the app flow -->
+        <p id="status">Starting...</p>
+
+        <!-- This div contains a button to toggle the device state -->
+        <div id="state-container">
+            <button id="toggle-state" onclick="toggleState()">Toggle State</button>
+        </div>
+
+        <!-- This div contains a table, a graph and a button to refresh the table and graph data -->
+        <div id="graph-container" class="graph">
+            <canvas id="graph" width="400" height="350"></canvas>
+            <p>Graph mode: <span id="graph-mode">Realtime</span></p>
+            <button id="realtime-graph" onclick="changeMode('r')">Realtime</button>
+            <button id="history-graph" onclick="changeMode('h')">History</button>
+        </div>
+
+        <!-- Link the main script file -->
+        <script src="./main.js"></script>
+    </body>
 </html>
