@@ -1,5 +1,5 @@
 # Import the library
-import grandeurcloud.apollo.device as apollo
+import grandeur.device as grandeur
 from gpiozero import LED
 
 led = LED(17)
@@ -27,7 +27,7 @@ def handleParms(data):
     led.value = data["deviceParms"]["state"]
 
 # Init the SDK and get reference to the project
-project = apollo.init(apiKey, token)
+project = grandeur.init(apiKey, token)
 
 # Place listener
 project.onConnection(onConnection)

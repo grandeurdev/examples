@@ -5,7 +5,7 @@
     a reference to the project
 */
 
-var apolloProject = apollo.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
+var project = grandeur.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
 
 /*
     Variable to store LED state
@@ -26,7 +26,7 @@ async function toggleLED() {
     var deviceID = "YOUR-DEVICE-ID";
 
     /* Then get a reference to device class */
-    var devices = apolloProject.devices();
+    var devices = project.devices();
 
     /* and in a try catch block */
     try {
@@ -65,7 +65,7 @@ async function toggleLED() {
     to server on successful authentication
     of a user
 */
-apolloProject.onConnection((status) => {
+project.onConnection((status) => {
     /*
         This callback gets fired
         whenever the connection status
@@ -103,7 +103,7 @@ async function login() {
     document.getElementById("status").innerText = "Logging in";
 
     /* Then get a reference to auth class */
-    var auth = apolloProject.auth();
+    var auth = project.auth();
 
     /* and in a try catch block */
     try {

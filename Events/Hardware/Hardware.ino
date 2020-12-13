@@ -1,5 +1,5 @@
 /* Including the SDK and WiFi header */
-#include <Apollo.h>
+#include <Grandeur.h>
 #include <ESP8266WiFi.h>
 
 /* Configurations */
@@ -12,7 +12,7 @@ String ssid = "WIFI-SSID";
 String password = "WIFI-PASSWORD";
 
 /* Create variable to hold project and device */
-Project apolloProject;
+Project project;
 Device device;
 
 /* Function to check device's connection status */
@@ -72,14 +72,14 @@ void setup() {
     /* Connect to WiFi */
     connectWiFi();
     
-    /* Initializes the global object "apollo" with your configurations. */
-    apolloProject = apollo.init(apiKey, token);
+    /* Initializes the global object "grandeur" with your configurations. */
+    project = grandeur.init(apiKey, token);
     
     /* Get reference to device */
-    device = apolloProject.device(deviceID);
+    device = project.device(deviceID);
     
     /* Sets connection state update handler */
-    apolloProject.onConnection(onConnection);
+    project.onConnection(onConnection);
     
     /* Add event handler on parms update */
     device.onParms(handleUpdate);
@@ -88,5 +88,5 @@ void setup() {
 /* Loop function */
 void loop() {
     /* Synchronizes the SDK with the cloud */
-    apolloProject.loop(WiFi.status() == WL_CONNECTED);
+    project.loop(WiFi.status() == WL_CONNECTED);
 }

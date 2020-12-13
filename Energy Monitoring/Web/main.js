@@ -4,7 +4,7 @@
  * a reference to the project
 */
 
-var project = apollo.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
+var project = grandeur.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
 
 /** 
  * This function uses the sdk to validate

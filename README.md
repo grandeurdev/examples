@@ -1,2 +1,2 @@
 # examples
-This repo contains example projects on Grandeur Cloud
+This repo contains example projects on Grandeur

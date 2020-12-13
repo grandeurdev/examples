@@ -1,6 +1,6 @@
 ```javascript
 // Init the SDK
-const project = apollo.init("API-KEY", "ACCESS-KEY", "ACCESS-TOKEN");
+const project = grandeur.init("API-KEY", "ACCESS-KEY", "ACCESS-TOKEN");
 
 // ... Your app logic
 

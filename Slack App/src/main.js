@@ -1,5 +1,5 @@
-// Init the SDK of Grandeur Cloud
-const apolloProject = apollo.init("API-KEY", "ACCESS-KEY", "ACCESS-TOKEN");
+// Init the SDK of Grandeur
+const project = grandeur.init("API-KEY", "ACCESS-KEY", "ACCESS-TOKEN");
 
 // Integration id
 const integrationID = "INTEGRATION-ID";
@@ -14,7 +14,7 @@ async function main() {
     document.getElementById("loader").style.display = "flex";
 
     // Create instance of auth class
-    const auth = apolloProject.auth();
+    const auth = project.auth();
     
     // Then check if user is authenticated
     const isAuth = await auth.isAuthenticated();
@@ -45,7 +45,7 @@ async function showLogin() {
 // Function to show main app screen
 async function showApp() {
     // Create instance of auth class
-    const auth = apolloProject.auth();
+    const auth = project.auth();
 
     // Then get the token of the integration
     const slack = await auth.oauthAccessToken(integrationID);
@@ -84,7 +84,7 @@ async function login() {
     document.getElementById("loader").style.display = "flex";
 
     // Create instance of auth class
-    const auth = apolloProject.auth();
+    const auth = project.auth();
 
     // Get data from form
     const email = document.getElementById("email").value;
@@ -112,7 +112,7 @@ async function connect() {
     document.getElementById("connect-slack").style.display = "none";
 
     // Create instance of auth class
-    const auth = apolloProject.auth();
+    const auth = project.auth();
 
     // Start oauth process
     await auth.oauth(integrationID);
@@ -128,7 +128,7 @@ async function logout() {
     document.getElementById("loader").style.display = "flex";
 
     // Create instance of auth class
-    const auth = apolloProject.auth();
+    const auth = project.auth();
 
     // Send request
     const res = await auth.logout();

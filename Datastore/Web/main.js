@@ -7,7 +7,7 @@ const accessKey = "YOUR-ACCESS-KEY";
 const accessToken = "YOUR-ACCESS-TOKEN";
 
 /** Initializing the SDK and getting reference to our project */
-var project = apollo.init(apiKey, accessKey, accessToken);
+var project = grandeur.init(apiKey, accessKey, accessToken);
 
 /** Function to log in the user */
 async function login() {

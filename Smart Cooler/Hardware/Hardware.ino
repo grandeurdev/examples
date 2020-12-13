@@ -1,5 +1,5 @@
 /* Including the SDK and WiFi library */
-#include <Apollo.h>
+#include <Grandeur.h>
 #include <ESP8266WiFi.h>
 
 /* Configurations */
@@ -91,8 +91,8 @@ void setup() {
     /* Connect to WiFi */
     connectWiFi();
     
-    /* Initializes the global object "apollo" with your configurations. */
-    project = apollo.init(apiKey, token);
+    /* Initializes the global object "grandeur" with your configurations. */
+    project = grandeur.init(apiKey, token);
     
     /* Get reference to device */
     device = project.device(deviceID);
