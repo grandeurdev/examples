@@ -1,0 +1,65 @@
+<!-- Index.html -->
+<!DOCTYPE html>
+<html>
+	<!-- Head block of our page-->
+	<head>
+		<!-- Let's give our page a title-->
+		<title>Pi Brightness Controller</title>
+
+		<!-- Link SDK with CDN -->
+		<script src="https://unpkg.com/grandeur-js"></script>
+
+		<!-- Add CSS styles -->
+		<link rel="stylesheet" href="src/styles.css">
+	</head>
+
+	<!-- Body block of our page-->
+	<body>
+		<!-- The loader page, will be displayed while we will verify the user auth status -->
+        <div class="page center" id="loader" style="display: flex;">
+            <!-- We are using a svg -->
+            <img src="src/loader.svg" class="loader" />
+		</div>
+		
+		<!-- The login page of our app -->
+		<div id="login" class="page center" style="display: none;">
+			<!-- Card holds the form -->
+			<div class="card">
+				<!-- The form to get email and passwordfrom users -->
+				<input type="email" name="email" id="email" placeholder="Email" />
+				<input type="password" name="password" id="password" placeholder="Password" />
+				
+				<!-- Button to submit the form-->
+				<button id="submitLogin">Login</button>
+			</div>
+		</div>
+
+		<!-- The page to hold the tiles -->
+		<div id="devices" class="page" style="display: none;">
+			<!-- The header of the page -->
+			<div class="header">
+				<!-- Add title of the page -->
+				<div>Brightness Controller</div>
+
+				<!-- Icon -->
+				<img src="./src/close.svg" id="logout"/>
+			</div>
+
+			<!-- Holder for tiles -->
+			<div class="tiles" id="tiles">
+				<!-- Each div represents a tile -->
+				
+				<!-- <div class="tile">
+					<div class="inner">
+						<input type="range" min="0" max="100" step="10" value="50" class="range">
+						<div class="title">Title</div>
+					</div>
+				</div>  -->
+				
+			</div>
+		</div>
+
+		<!-- Main script file -->
+		<script src="main.js"></script>
+	</body>
+</html>

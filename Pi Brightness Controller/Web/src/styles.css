@@ -1,0 +1,206 @@
+/* Custom Font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+/* Apply Font to body*/
+body {
+    margin: 0;
+    top: 0;
+    left: 0;
+}
+
+/* Page */
+.page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #030303;
+}
+
+/* Align the content into the center of the page */
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card holds the content/form and scales upto a certain width */
+.card {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: auto;
+    box-sizing: border-box;
+}
+
+/* Inverted class will give the page whilte backgroundcolor */
+.inverted {
+    background-color: #efefef;
+}
+
+/* Inputs */
+input {
+    height: 50px;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+    border: 1.1pt solid #efefef;
+    background-color: transparent;
+    color: #efefef;
+    border-radius: 5px;
+    padding: 0 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    box-sizing: border-box;
+}
+
+/* Hide the default blue outline of input */
+input:active, input:focus{
+    outline: none
+}
+
+/* Button */
+button {
+    height: 50px;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+    background-color: #efefef;
+    color: #030303;
+    border-radius: 5px;
+    border: 0;
+    padding: 0 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    box-sizing: border-box;
+    cursor: pointer
+}
+
+/* Inline button */
+.inline {
+    width: auto;
+    margin-bottom: 0;
+}
+
+/* Hide the default blue outline of button */
+button:active, button:focus{
+    outline: none
+}
+
+/* Svg */
+.loader{
+    width: 70px;
+    height: 70px;
+    display: block;
+}
+
+/* Header */
+.header {
+    display: flex;
+    width: 100%;
+    height: 80px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    box-sizing: border-box;
+    /* background-color: #1d1d1d; */
+    background-color: 	#00A86B;
+    box-shadow: 0 2px 5px rgba(0,0,0,.15);
+}
+
+/* Header title */
+.header div {
+    color: #efefef;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+/* Icon on header */
+.header img {
+    width: auto;
+    height: 25%;
+    cursor: pointer;
+}
+
+/* Tiles */
+.tiles {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 15px;
+    margin-top: 40px;
+    justify-content: space-between;
+}
+
+/* Tile */
+.tiles .tile {
+    position: relative;
+    display: block;
+    width: 250px;
+    height: 100px;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+/* Inner */
+.tiles .tile .inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #1d1d1d;
+    box-shadow: 0 2px 5px rgba(0,0,0,.15);
+    border-radius: 5px;
+    padding: 20px;
+}
+
+/* Title of tile */
+.tiles .tile .inner .title {
+    width: 100%;
+    height: fit-content;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: #efefef;
+    text-align: center;
+}
+
+/* Slider */
+.tiles .tile .inner .range {
+    margin: 5px 0 0 0;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 10px;
+    background: #333333;
+    outline: none;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+    padding: 0;
+    border: none;
+}
+
+.tiles .tile .inner .range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00A86B;
+    cursor: pointer;
+}
+  
+.tiles .tile .inner .range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #00A86B;
+    cursor: pointer;
+}
