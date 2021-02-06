@@ -58,36 +58,6 @@ login();
 /** State of our device */
 var deviceState = false;
 
-<<<<<<< HEAD
-/** Config Object for our graph */
-const chartConfig = {
-  type: "line",
-  data: {
-    labels: [],
-    datasets: [{
-      data: [],
-      borderColor: "#000000",
-      steppedLine: true
-    }]
-  },
-  options: {
-    title: {display: true, text: "State Update History"},
-    legend: {display: false},
-    hover: {mode: 'index'},
-    fill: false,
-    scales: {
-      xAxes: [{
-        type: "time",
-        scaleLabel: {labelString: "Time"},
-        gridLines: {display: false}
-      }],
-      yAxes: [{
-        ticks:{min: 0, max: 1, stepSize: 1},
-        scaleLabel: {labelString: "State"},
-      }]
-    }
-  }
-=======
 /** Store the device's ID */
 var deviceID = "YOUR-DEVICE-ID";
 
@@ -120,124 +90,10 @@ const chartConfig = {
 			}]
 		}
 	}
->>>>>>> 00310e3f0a3563ee8d75021f4a6e5066956f0c48
 };
 
 /** This function is called when the web app loads */
 window.onload = function() {
-<<<<<<< HEAD
-  /** We draw an empty chart when the app loads. */
-  const ctx = document.getElementById('graph').getContext('2d');
-  /** Creating a new chart */
-  window.myChart = new Chart(ctx, chartConfig);
-}
-
-/** This sets onclick handler for the toggle-state button */
-document.getElementById("toggle-state").onclick = async () => {
-  /** This function toggles the state value and publishes it to the cloud */
-
-  /** Toggling the state */
-  deviceState = !deviceState;
-  /** This publishes the state update to the cloud */
-  await myDevice.setParms({state: deviceState});
-
-  /** This displays the updated state to in the app */
-  document.getElementById("state").innerHTML = "State is: " + deviceState;
-}
-
-/** This sets onclick handler for the refresh-graph button */
-document.getElementById("refresh-graph").onclick = async () => {
-  /** This function refreshes the graph with new data from datastore */
-  /** This gets reference to our "history" collection in datastore*/
-  var historyCollection = myProject.datastore().collection("history");
-  /** This fetches first page of documents from our  "history" collection */
-  var searchResponse = [];
-  searchResponse[0] = await historyCollection.search({}, {documentID: 0}, 1);
-  switch(searchResponse[0].code) {
-    case "DATASTORE-DOCUMENTS-FETCHED":
-      /** If the documents are successfully fetched
-      */
-      var logs = searchResponse[0].documents;
-      /** If there are more pages, we fetch them too in this for-loop */
-      for(var i = 1; i == 1 ? searchResponse[i - 1].documents.length != searchResponse[i - 1].numberOfDocuments :
-        searchResponse[i - 1].documents.length + searchResponse[i - 2].documents.length != searchResponse[i - 1].numberOfDocuments;
-        i++) {
-        searchResponse[i] = await historyCollection.search({}, {documentID: 0}, i + 1);
-        switch(searchResponse[i].code) {
-          case "DATASTORE-DOCUMENTS-FETCHED":
-            /** Adding documents to the logs array */
-            logs = logs.concat(searchResponse[i].documents);
-            break;
-          default:
-            i--;
-        }
-      }
-      
-      /** Clearing previously loaded graph data */
-      chartConfig.data.datasets[0].data = [];
-      chartConfig.data.labels = [];
-      /** Setting labels (x-axis) and data (y-axis) */
-      for(key in logs) {
-        pushToGraph(new Date(Number(logs[key].timestamp)), logs[key].state)
-      }
-      /** Refreshing the chart
-      */
-      window.myChart.update();
-      break;
-  }
-}
-
-function pushToGraph(x, y) {
-  /** This function pushes a single data point to our graph. */
-  chartConfig.data.labels.push(x);
-  chartConfig.data.datasets[0].data.push(y);
-}
-
-/** After successful user authentication, the SDK establishes a real-time connection with the
- * cloud. And that change in connection status is propagated through the onConnection function
- * here.
-*/
-myProject.onConnection((status) => {
-  /** This callback function is called when our app's realtime connection
-   * with the cloud is established.
-  */
-  switch(status) {
-    case "CONNECTED": 
-      /** If the app is connected with the cloud,
-       * we show the status as "Connected".
-      */
-      document.getElementById("status").innerText = "Connected";
-
-      /** And we enable the state-container and graph-container div,
-       * making the buttons and the graph visible.
-       */
-      document.getElementById("state-container").style.display = "block";
-      document.getElementById("graph-container").style.display = "block";
-
-      /** Setting a parms update handler. This function will be called when someone
-       * updates a parms variable.
-       */
-      myDevice.onParms((updatedParms) => {
-        pushToGraph(new Date(), updatedParms.state);
-        window.myChart.update();
-      });
-      
-      /** We refresh our graph with data from the datastore when our app loads.
-      */
-     document.getElementById("refresh-graph").onclick();
-      break;
-    default: 
-      /** If the app is disconnected from the cloud,
-       * we show the status as "Disconnected".
-      */
-      document.getElementById("status").innerText = "Disconnected";
-      /** And disables the state-container and graph-container div,
-       * making the buttons and the graph invisible.
-       */
-      document.getElementById("state-container").style.display = "none";
-      document.getElementById("graph-container").style.display = "none";
-  }
-=======
 	/** We draw an empty chart when the app loads. */
 	const ctx = document.getElementById('graph').getContext('2d');
 
@@ -265,7 +121,7 @@ async function toggleState() {
 	}
 
 	/** This publishes the state update to the cloud */
-	await device.setParms(packet);
+	await device.data().set("", packet);
 
 	/** Log the data into history by using datastore */
 	await project.datastore().collection("history").insert([packet]);
@@ -288,7 +144,7 @@ async function getData() {
 	*/
 	var page = 2;
 
-	while(documents.length < res.numberOfDocuments) {
+	while(documents.length < res.nDocuments) {
 		res = await history.search({}, undefined, page);
 
 		/** Push documents */
@@ -342,7 +198,7 @@ project.onConnection((status) => {
 			document.getElementById("status").innerText = "Connected";
 			
 			/** Add event listener on device parms */
-			project.devices().device(deviceID).onParms((update) => {
+			project.devices().device(deviceID).data().on("", (update) => {
 				/** If the mode of the graph is realtime */
 				if (mode == "r") {
 					/** Push to graph */
@@ -366,5 +222,4 @@ project.onConnection((status) => {
 			*/
 			document.getElementById("status").innerText = "Disconnected";
 	}
->>>>>>> 00310e3f0a3563ee8d75021f4a6e5066956f0c48
 });

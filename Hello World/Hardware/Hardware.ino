@@ -47,9 +47,9 @@ void onConnection(bool status) {
 }
 
 /* Function to handle update in device state */
-void handleUpdate(JSONObject payload) {
+void handleUpdate(Var payload) {
     /* Get state */
-    double newState = (double) payload["deviceParms"]["state"];
+    double newState = (double) payload["data"];
     
     /* Print if got an update */
     if (newState != state) {
@@ -113,10 +113,10 @@ void loop() {
         */
             Serial.println("Checking for Update...");
             
-            /* Gets new Parms from the cloud and passes the
+            /* Gets new state from the cloud and passes the
                them to *handleUpdate* function.
             */
-            device.getParms(handleUpdate);
+            device.data().get("state", handleUpdate);
 
             /* Updates *current* variable */
             current = millis();

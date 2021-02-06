@@ -15,16 +15,16 @@ def onConnection(state):
     print(state)
 
 # Callback function to handle state change event
-def handleEvent(data):
+def updateHandler(state, path):
     # Print
-    print("Brigness: " + data["state"] + "%")
-    led.value = int(data["state"])/100
+    print("Brigness: " + state + "%")
+    led.value = int(state)/100
 
 # Callback function to handle current state
-def handleParms(data):
+def dataHandler(res):
     # Print
-    print("Brigness: " + data["deviceParms"]["state"] + "%")
-    led.value = int(data["deviceParms"]["state"])/100
+    print("Brigness: " + res["data"]["state"] + "%")
+    led.value = int(res["data"]["state"])/100
 
 # Init the SDK and get reference to the project
 project = grandeur.init(apiKey, token)
@@ -36,10 +36,10 @@ project.onConnection(onConnection)
 device = project.device(deviceID)
 
 # Subscribe to state change event
-device.onParms(handleEvent)
+device.data().on("state", updateHandler)
 
 # Get current state
-device.getParms(handleParms)
+device.data().get("state", dataHandler)
 
 # Block main thread
 while 1:

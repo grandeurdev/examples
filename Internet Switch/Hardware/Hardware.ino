@@ -32,11 +32,8 @@ void onConnection(bool status) {
   }
 }
 
-/* Function to handle parms update event */
-void handleUpdate(JSONObject updateObject) {
-    /* Get state from the updated parms */
-    int state = (int) updateObject["state"];
-    
+/* Function to handle state update event */
+void updateHandler(int state, const char* path) {
     /* Print state */
     Serial.printf("Updated state is %d\n", state);
     
@@ -82,8 +79,8 @@ void setup() {
     /* Sets connection state update handler */
     project.onConnection(onConnection);
     
-    /* Add event handler on parms update */
-    device.onParms(handleUpdate);   
+    /* Add event handler on state variable */
+    device.data().on("state", updateHandler);   
     
     /* Set mode of LED to output */
     pinMode(2, OUTPUT);

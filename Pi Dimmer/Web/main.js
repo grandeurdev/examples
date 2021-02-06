@@ -53,27 +53,30 @@ document.getElementById("submitLogin").addEventListener("click", async () => {
 async function getDevicesList() {
 	/** Use sdk devices class */
 	var devices = await project.devices();
-	var res = await devices.list();
+	var res = await devices.get();
 
 	/** Variable to hold the ui */
 	var content = "";
 
 	/** Then loop over the devices list returned in response and populate the ui */
 	res.devices.forEach(device => {
+		/** Get data of device */
+		var {data} = await devices.device(device.deviceID).data().get();
+
 		/** Add tile to the ui */
 		content += `
 			<div class="tile">
 				<div class="inner">
-					<input type="range" min="0" max="100" step="10" value="${device.parms.state}" id="${device.deviceID}" onchange="updateState(this)" class="range">
+					<input type="range" min="0" max="100" step="10" value="${data.state}" id="${device.deviceID}" onchange="updateState(this)" class="range">
 					<div class="title">${device.name}</div>
 				</div>
 			</div>
 		`
 
 		/** Then also subscribe to the state update event of the device */
-		devices.device(device.deviceID).onParms( parms => {
+		devices.device(device.deviceID).data().on("state", state => {
 			/** Update the tile color to represent that the device is on*/
-			document.getElementById(device.deviceID).value = parms.state;
+			document.getElementById(device.deviceID).value = state;
 		})
 	});
 
@@ -84,9 +87,7 @@ async function getDevicesList() {
 /** Function to update the state of a device */
 async function updateState(device) {
 	// /** Use the devices class of sdk to report the upgrade */
-	await project.devices().device(device.id).setParms({
-		state: device.value
-	});
+	await project.devices().device(device.id).data().set("state", device.value);
 }
 
 /** Add event handler on logout icon */

@@ -53,17 +53,20 @@ document.getElementById("submitLogin").addEventListener("click", async () => {
 async function getDevicesList() {
 	/** Use sdk devices class */
 	var devices = await project.devices();
-	var res = await devices.list();
+	var res = await devices.get();
 
 	/** Variable to hold the ui */
 	var content = "";
 
 	/** Then loop over the devices list returned in response and populate the ui */
 	res.devices.forEach(device => {
+		/** Get device data */
+		var {data} = await devices.device(device.deviceID).data().get();
+
 		/** Add tile to the ui */
 		content += `
 			<div class="tile" onclick="displayData('${device.deviceID}')">
-				<div class="inner ${device.parms.state? "on" : ""}" id="${device.deviceID}" data-state="${device.parms.state}">
+				<div class="inner ${device.parms.state? "on" : ""}" id="${device.deviceID}" data-state="${data.state}">
 					<div>${device.name}</div>
 					<img src="src/power.svg" />
 				</div>
@@ -101,7 +104,7 @@ async function getRealtimeUpdates() {
 	var devices = await project.devices();
 
 	/** and add handler to update on device data */
-	state.handler = await devices.device(state.deviceID).onSummary((update) => {
+	state.handler = await devices.device(state.deviceID).data().on("", (update) => {
 		/** Push labels to graph */
 		chartConfig.data.labels.push(update.time * 1000);
 

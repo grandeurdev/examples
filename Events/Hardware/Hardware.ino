@@ -33,10 +33,7 @@ void onConnection(bool status) {
 }
 
 /* Function to handle update in device state */
-void handleUpdate(JSONObject updateObject) {
-    /* Get state */
-    double state = (double) updateObject["state"];
-    
+void updateHanlder(double state, const char* path) {
     /* Print state */
     Serial.printf("Updated state is %f\n", state);
 
@@ -81,8 +78,8 @@ void setup() {
     /* Sets connection state update handler */
     project.onConnection(onConnection);
     
-    /* Add event handler on parms update */
-    device.onParms(handleUpdate);
+    /* Add event handler on state update */
+    device.data().on("state", updateHanlder);
 }
 
 /* Loop function */

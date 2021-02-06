@@ -40,7 +40,7 @@ project.onConnection((status) => {
             var devices = project.devices();
 
             /* Updates the device state */
-            await devices.device(deviceID).setParms({state: Date.now()});
+            await devices.device(deviceID).data().set("state", Date.now());
    
             /* Logs the state to browser's console */  
             console.log(state);

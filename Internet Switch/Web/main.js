@@ -34,11 +34,11 @@ async function toggleLED() {
         LED = LED? 0: 1;
 
         /* Submit request to update state */
-        var res = await devices.device(deviceID).setParms({state: LED});
+        var res = await devices.device(deviceID).data().set("state", LED);
 
         /* Got the response */
         switch(res.code) {
-            case "DEVICE-PARMS-UPDATED":
+            case "DEVICE-DATA-UPDATED":
                 /* Updated the device state successfully */
                 console.log(`State Updated to ${LED? "ON": "OFF"}`);
                 break;

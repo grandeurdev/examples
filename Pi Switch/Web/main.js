@@ -53,17 +53,20 @@ document.getElementById("submitLogin").addEventListener("click", async () => {
 async function getDevicesList() {
 	/** Use sdk devices class */
 	var devices = await project.devices();
-	var res = await devices.list();
+	var res = await devices.get();
 
 	/** Variable to hold the ui */
 	var content = "";
 
 	/** Then loop over the devices list returned in response and populate the ui */
 	res.devices.forEach(device => {
+		/** Get device data */
+		var {data} = await devices.device(device.deviceID).data().get();
+
 		/** Add tile to the ui */
 		content += `
 			<div class="tile" onclick="updateState('${device.deviceID}')">
-				<div class="inner" id="${device.deviceID}" data-state="${device.parms.state}">
+				<div class="inner" id="${device.deviceID}" data-state="${data.state}">
 					<div>${device.name}</div>
 					<img src="src/button-${device.parms.state? "on" : "off"}.svg" />
 				</div>
@@ -71,12 +74,12 @@ async function getDevicesList() {
 		`
 
 		/** Then also subscribe to the state update event of the device */
-		devices.device(device.deviceID).onParms( parms => {
+		devices.device(device.deviceID).data().on("state", state => {
 			/** Update the tile color to represent that the device is on*/
-			document.getElementById(device.deviceID).getElementsByTagName("img")[0].src = `src/button-${parms.state? "on" : "off"}.svg`;
+			document.getElementById(device.deviceID).getElementsByTagName("img")[0].src = `src/button-${state? "on" : "off"}.svg`;
 
 			/** Update local attribute and store the latest state in it */
-			document.getElementById(device.deviceID).setAttribute("data-state", parms.state);
+			document.getElementById(device.deviceID).setAttribute("data-state", state);
 		})
 	});
 
@@ -90,9 +93,7 @@ async function updateState(deviceID) {
 	var newState = document.getElementById(deviceID).getAttribute("data-state") === "1" ? 0 : 1;
 
 	/** Use the devices class of sdk to report the upgrade */
-	await project.devices().device(deviceID).setParms({
-		state: newState
-	});
+	await project.devices().device(deviceID).data().set("state", newState);
 }
 
 /** Add event handler on logout icon */

@@ -33,13 +33,9 @@ void onConnection(bool status) {
 }
 
 /** Function to handle update in device state */
-void handleUpdate(JSONObject updateObject) {
-    /** Get state */
-    boolean state = (boolean) updateObject["state"];
-    
+void updateHandler(Var update, const char* path) {
     /** Print state */
-    Serial.printf("Updated state is %d\n", state);
-
+    Serial.printf("Updated state is %d\n", (bool) update["state"]);
 }
 
 /** Function to connect to WiFi */
@@ -81,8 +77,8 @@ void setup() {
     /** Sets connection state update handler */
     project.onConnection(onConnection);
     
-    /** Add event handler on parms update */
-    device.onParms(handleUpdate);
+    /** Add event handler on state update */
+    device.data().on("", updateHandler);
 }
 
 /** Loop function */

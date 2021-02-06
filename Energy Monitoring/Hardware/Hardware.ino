@@ -91,12 +91,12 @@ void connectWiFi() {
 }
 
 /* Function to confirm that data has been updated */
-void summaryCallback(JSONObject setResult) {
+void dataCallback(Var res) {
   /* If the update was recorded successfully */
-  if(setResult["code"] == "DEVICE-SUMMARY-UPDATED") {
+  if(res["code"] == "DEVICE-DATA-UPDATED") {
     /* Get data */
-    double current = (double) setResult["update"]["current"];
-    double power = (double) setResult["update"]["power"];
+    double current = (double) res["update"]["current"];
+    double power = (double) res["update"]["power"];
 
     /* Print */
     Serial.printf("Current: %f Power: %f\n", current, power);
@@ -105,7 +105,7 @@ void summaryCallback(JSONObject setResult) {
   }
   
   /* If the summary could not be updated. */
-  Serial.println("Failed to Update Summary");
+  Serial.println("Failed to Update DATA");
   return;
 }
 
@@ -163,14 +163,14 @@ void sendUpdate() {
 		unsigned long time = timeClient.getEpochTime();
 		
 		// Form packet
-		JSONObject summary;
+		Var data;
 
-		summary["current"] = current;
-		summary["power"] = power;
-		summary["time"] = time;
+		data["current"] = current;
+		data["power"] = power;
+		data["time"] = time;
 
 		/* Record update */
-		device.setSummary(summary, summaryCallback);
+		device.data().set("", data, dataCallback);
 		
 		/* Record last record send time */
 		lastUpdate = millis();
