@@ -104,7 +104,7 @@ async function getRealtimeUpdates() {
 	var devices = await project.devices();
 
 	/** and add handler to update on device data */
-	state.handler = await devices.device(state.deviceID).data().on("", (update) => {
+	state.handler = await devices.device(state.deviceID).data().on("", (path, update) => {
 		/** Push labels to graph */
 		chartConfig.data.labels.push(update.time * 1000);
 

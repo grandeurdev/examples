@@ -45,7 +45,7 @@ void onConnection(bool status) {
 }
 
 /* Function to handle state update event */
-void updateHandler(int state, const char* path) {
+void updateHandler(const char* path, int state) {
     /* Print state */
     Serial.printf("Updated state is %d\n", state);
     

@@ -47,7 +47,7 @@ void onConnection(bool status) {
 }
 
 /* Function to handle update in device state */
-void handleUpdate(Var payload) {
+void handleUpdate(const char* code, Var payload) {
     /* Get state */
     double newState = (double) payload["data"];
     

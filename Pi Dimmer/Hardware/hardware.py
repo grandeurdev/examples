@@ -15,13 +15,13 @@ def onConnection(state):
     print(state)
 
 # Callback function to handle state change event
-def updateHandler(state, path):
+def updateHandler(path, state):
     # Print
     print("Brigness: " + state + "%")
     led.value = int(state)/100
 
 # Callback function to handle current state
-def dataHandler(res):
+def dataHandler(code, res):
     # Print
     print("Brigness: " + res["data"]["state"] + "%")
     led.value = int(res["data"]["state"])/100

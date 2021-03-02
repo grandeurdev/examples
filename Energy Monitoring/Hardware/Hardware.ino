@@ -91,9 +91,9 @@ void connectWiFi() {
 }
 
 /* Function to confirm that data has been updated */
-void dataCallback(Var res) {
+void dataCallback(const char* code, Var res) {
   /* If the update was recorded successfully */
-  if(res["code"] == "DEVICE-DATA-UPDATED") {
+  if(code == "DEVICE-DATA-UPDATED") {
     /* Get data */
     double current = (double) res["update"]["current"];
     double power = (double) res["update"]["power"];
@@ -174,7 +174,7 @@ void sendUpdate() {
 		
 		/* Record last record send time */
 		lastUpdate = millis();
-    }
+  }
 }
 
 void setup() {

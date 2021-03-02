@@ -198,7 +198,7 @@ project.onConnection((status) => {
 			document.getElementById("status").innerText = "Connected";
 			
 			/** Add event listener on device parms */
-			project.devices().device(deviceID).data().on("", (update) => {
+			project.devices().device(deviceID).data().on("", (path, update) => {
 				/** If the mode of the graph is realtime */
 				if (mode == "r") {
 					/** Push to graph */

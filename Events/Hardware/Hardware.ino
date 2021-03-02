@@ -33,7 +33,7 @@ void onConnection(bool status) {
 }
 
 /* Function to handle update in device state */
-void updateHanlder(double state, const char* path) {
+void updateHanlder(const char* path, double state) {
     /* Print state */
     Serial.printf("Updated state is %f\n", state);
 

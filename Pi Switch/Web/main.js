@@ -74,7 +74,7 @@ async function getDevicesList() {
 		`
 
 		/** Then also subscribe to the state update event of the device */
-		devices.device(device.deviceID).data().on("state", state => {
+		devices.device(device.deviceID).data().on("state", (path, state) => {
 			/** Update the tile color to represent that the device is on*/
 			document.getElementById(device.deviceID).getElementsByTagName("img")[0].src = `src/button-${state? "on" : "off"}.svg`;
 
