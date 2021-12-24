@@ -16,8 +16,8 @@ String ssid = "WIFI-SSID";
 String password = "WIFI-PASSWORD";
 
 /* Create variable to hold project and device */
-Project project;
-Device device;
+Grandeur::Project project;
+Grandeur::Project::Device device;
 
 /* Start NTP */
 WiFiUDP ntpUDP;
