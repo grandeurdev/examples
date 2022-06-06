@@ -59,7 +59,7 @@ async function getDevicesList() {
 	var content = "";
 
 	/** Then loop over the devices list returned in response and populate the ui */
-	res.devices.forEach(device => {
+	res.devices.forEach(async device => {
 		/** Get device data */
 		var {data} = await devices.device(device.deviceID).data().get();
 
