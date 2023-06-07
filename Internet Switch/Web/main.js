@@ -5,7 +5,7 @@
     a reference to the project
 */
 
-var project = grandeur.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
+var project = grandeur.init("YOUR-API-KEY", "YOUR-SECRET");
 
 /*
     Variable to store LED state

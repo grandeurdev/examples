@@ -1,0 +1,14 @@
+menu "Grandeur Configuration"
+
+    config API_KEY
+        string "API Key"
+        default "apiKey"
+        help
+            API Key for the app to use while connecting to Grandeur.
+
+    config AUTH_TOKEN
+        string "Auth Token"
+        default "authtoken"
+        help
+            Auth token for the app to use while connecting to Grandeur.
+endmenu

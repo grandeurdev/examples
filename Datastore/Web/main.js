@@ -3,11 +3,10 @@
 */
 
 const apiKey = "YOUR-API-KEY";
-const accessKey = "YOUR-ACCESS-KEY";
-const accessToken = "YOUR-ACCESS-TOKEN";
+const secret = "YOUR-SECRET";
 
 /** Initializing the SDK and getting reference to our project */
-var project = grandeur.init(apiKey, accessKey, accessToken);
+var project = grandeur.init(apiKey, secret);
 
 /** Function to log in the user */
 async function login() {

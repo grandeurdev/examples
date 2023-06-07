@@ -5,7 +5,7 @@
 /** Configurations */
 String deviceID = "YOUR-DEVICE-ID";
 String apiKey = "YOUR-APIKEY";
-String token = "YOUR-ACCESS-TOKEN";
+String token = "YOUR-DEVICE-TOKEN";
 
 /** WiFi credentials */
 String ssid = "WIFI-SSID";

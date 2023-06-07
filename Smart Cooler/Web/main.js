@@ -4,7 +4,7 @@
  * a reference to the project
 */
 
-var project = grandeur.init("YOUR-API-KEY", "YOUR-ACCESS-KEY", "YOUR-ACCESS-TOKEN");
+var project = grandeur.init("YOUR-API-KEY", "YOUR-SECRET");
 
 /** 
  * This function uses the sdk to validate
@@ -68,14 +68,14 @@ async function getDevicesList() {
 	var content = "";
 
 	/** Then loop over the devices list returned in response and populate the ui */
-	res.devices.forEach(device => {
+	res.devices.forEach(async device => {
 		/** Get data of device */
 		var {data} = await devices.device(device.deviceID).data().get();
 
 		/** Add tile to the ui */
 		content += `
 			<div class="tile" onclick="updateState('${device.deviceID}')">
-				<div class="inner ${device.parms.state? "on" : ""}" id="${device.deviceID}" data-state="${data.state}">
+				<div class="inner ${device.data.state? "on" : ""}" id="${device.deviceID}" data-state="${data.state}">
 					<div>${device.name}</div>
 					<img src="src/fan.svg" />
 				</div>
